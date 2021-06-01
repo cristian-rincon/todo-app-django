@@ -18,7 +18,7 @@ El servicio de backend (Python3 - Django Rest Framework), el cual se encarga de 
 
 > En esta versión de la aplicación estamos utilizando SQLlite como base de datos, ya que es un prototipo, no se recomienda su uso en sistemas productivos.
 
-![Foto arquitectura de la app](./arquitectura%20general%20todoapp.png)
+![Foto arquitectura de la app](./arquitectura_general_todoapp.png)
 
 ## Comandos utilitarios
 
