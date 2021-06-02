@@ -38,3 +38,28 @@ docker-compose run --rm backend python manage.py migrate # Aplicar las migracion
 docker-compose run --rm backend python manage.py createsuperuser # Crear super usuario para django admin
 ```
 
+## Creación de los contenedores
+
+### Contenedor para servicio Frontend
+
+```Docker
+# Se obtiene capa de sistema base desde el dockerhub, la versión alpine es una versión ligera.
+FROM node:lts-alpine
+
+# Se declara el directorio de trabajo
+WORKDIR /app/
+
+# Instalación de dependencias
+# COPY package.json yarn.lock /app/
+
+# RUN npm install
+
+# Se copia el Código del servicio frontend al contexto de Docker
+COPY . /app/
+
+# Se expone el puerto 3000 a través del cual podremos consumir el servicio
+EXPOSE 3000
+
+# Comando para inicialización del servicio
+# CMD npm start
+```
