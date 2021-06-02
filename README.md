@@ -63,3 +63,63 @@ EXPOSE 3000
 # Comando para inicialización del servicio
 # CMD npm start
 ```
+
+### Contenedor para servicio Backend
+
+```Docker
+# Se obtiene capa de sistema base desde el dockerhub, la versión alpine es una versión ligera.
+FROM python:3.8-slim-buster
+
+# Se declara el directorio de trabajo
+WORKDIR /app/backend
+
+# Instalación de dependencias
+COPY requirements.txt /app/backend
+RUN pip3 install --upgrade pip -r requirements.txt
+
+# Se copia el Código del servicio frontend al contexto de Docker
+COPY . /app/backend
+
+# Se expone el puerto 3000 a través del cual podremos consumir el servicio
+EXPOSE 8000
+
+# Be sure to use 0.0.0.0 for the host within the Docker container,
+# otherwise the browser won't be able to find it
+# Comando para inicialización del servicio
+CMD python3 manage.py runserver 0.0.0.0:8000
+```
+
+### Conexión de servicios con `docker-compose`
+
+Compose es una herramienta para definir y ejecutar aplicaciones Docker de varios contenedores. Con Compose, usa un archivo YAML para configurar los servicios de su aplicación. Luego, con un solo comando, crea e inicia todos los servicios desde su configuración.
+
+Estructura del compose file básico
+
+```Docker
+version: "3.8"                                              # Se declara la versión del runtime de compose a usar
+services:                                                   # Se declaran los servicios que van a vivir dentro de compose
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/app/backend                              # Se declara un volumen externo a docker para poder utilizar el filesystem
+    ports:
+      - "8000:8000"                                         # Apertura de puertos para consumir el servicio
+    stdin_open: true
+    tty: true
+    command: python3 manage.py runserver 0.0.0.0:8000       # Comando de inicialización del servicio backend
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app                                     # Se declara un volumen externo a docker para poder utilizar el filesystem
+      # One-way volume to use node_modules from inside image
+      - /app/node_modules
+    ports:
+      - "3000:3000"                                         # Apertura de puertos para consumir el servicio
+    environment:
+      - NODE_ENV=development
+    depends_on:                                             
+      - backend
+    command: npm start                                      # Comando de inicialización del servicio backend
+```
+
+
