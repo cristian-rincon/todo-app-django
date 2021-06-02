@@ -9,7 +9,8 @@
   * [Creación de los contenedores](#creaci-n-de-los-contenedores)
     + [Contenedor para servicio Frontend](#contenedor-para-servicio-frontend)
     + [Contenedor para servicio Backend](#contenedor-para-servicio-backend)
-    + [Conexion de servicios con `docker-compose`](#conexi-n-de-servicios-con--docker-compose-)
+    + [Conexión de servicios con `docker-compose`](#conexi-n-de-servicios-con--docker-compose-)
+
 
 # todo-app-django
 Aplicación Web para llevar la lista de pendientes 
