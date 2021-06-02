@@ -96,30 +96,38 @@ Compose es una herramienta para definir y ejecutar aplicaciones Docker de varios
 Estructura del compose file básico
 
 ```Docker
-version: "3.8"                                              # Se declara la versión del runtime de compose a usar
-services:                                                   # Se declaran los servicios que van a vivir dentro de compose
+# Se declara la versión del runtime de compose a usar
+version: "3.8"                                              
+# Se declaran los servicios que van a vivir dentro de compose
+services:                                                   
   backend:
     build: ./backend
+    # Se declara un volumen externo a docker para poder utilizar el filesystem
     volumes:
-      - ./backend:/app/backend                              # Se declara un volumen externo a docker para poder utilizar el filesystem
+      - ./backend:/app/backend                              
+    # Apertura de puertos para consumir el servicio
     ports:
-      - "8000:8000"                                         # Apertura de puertos para consumir el servicio
+      - "8000:8000"                                         
     stdin_open: true
     tty: true
-    command: python3 manage.py runserver 0.0.0.0:8000       # Comando de inicialización del servicio backend
+    # Comando de inicialización del servicio backend
+    command: python3 manage.py runserver 0.0.0.0:8000       
   frontend:
     build: ./frontend
+    # Se declara un volumen externo a docker para poder utilizar el filesystem
     volumes:
-      - ./frontend:/app                                     # Se declara un volumen externo a docker para poder utilizar el filesystem
+      - ./frontend:/app                                     
       # One-way volume to use node_modules from inside image
       - /app/node_modules
+    # Apertura de puertos para consumir el servicio
     ports:
-      - "3000:3000"                                         # Apertura de puertos para consumir el servicio
+      - "3000:3000"                                         
     environment:
       - NODE_ENV=development
     depends_on:                                             
       - backend
-    command: npm start                                      # Comando de inicialización del servicio backend
+    # Comando de inicialización del servicio backend
+    command: npm start                                      
 ```
 
 
