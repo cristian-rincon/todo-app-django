@@ -2,14 +2,14 @@
 
 - [todo-app-django](#todo-app-django)
   * [Objetivo](#objetivo)
-  * [Arquitectura de la aplicación (Alto nivel)](#arquitectura-de-la-aplicación--alto-nivel-)
+  * [Arquitectura de la aplicación (Alto nivel)](#arquitectura-de-la-aplicaci-n--alto-nivel-)
   * [Comandos utilitarios](#comandos-utilitarios)
     + [Comandos de Makefile](#comandos-de-makefile)
     + [Comandos de compose](#comandos-de-compose)
-  * [Creación de los contenedores](#creación-de-los-contenedores)
+  * [Creación de los contenedores](#creaci-n-de-los-contenedores)
     + [Contenedor para servicio Frontend](#contenedor-para-servicio-frontend)
     + [Contenedor para servicio Backend](#contenedor-para-servicio-backend)
-    + [Conexion de servicios con `docker-compose`](#conexión-de-servicios-con--docker-compose-)
+    + [Conexion de servicios con `docker-compose`](#conexi-n-de-servicios-con--docker-compose-)
 
 # todo-app-django
 Aplicación Web para llevar la lista de pendientes 
