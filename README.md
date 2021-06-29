@@ -1,6 +1,22 @@
+## Tabla de Contenidos
+
+- [todo-app-django](#todo-app-django)
+  - [Objetivo](#objetivo)
+  - [Arquitectura de la aplicación (Alto nivel)](#arquitectura-de-la-aplicación-alto-nivel)
+  - [Comandos utilitarios](#comandos-utilitarios)
+    - [Comandos de Makefile](#comandos-de-makefile)
+    - [Comandos de compose](#comandos-de-compose)
+  - [Desarrollo](#desarrollo)
+  - [Creación de los contenedores](#creación-de-los-contenedores)
+    - [Contenedor para servicio Frontend](#contenedor-para-servicio-frontend)
+    - [Contenedor para servicio Backend](#contenedor-para-servicio-backend)
+    - [Conexión de servicios con `docker-compose`](#conexión-de-servicios-con-docker-compose)
+  - [Conexión a la base de datos](#conexión-a-la-base-de-datos)
+  - [Despliegue](#despliegue)
+
+
 # todo-app-django
 Aplicación Web para llevar la lista de pendientes 
-
 
 ## Objetivo
 
@@ -38,6 +54,101 @@ docker-compose run --rm backend python manage.py migrate # Aplicar las migracion
 docker-compose run --rm backend python manage.py createsuperuser # Crear super usuario para django admin
 ```
 
+## Desarrollo
+
+Cristian Orlando Rincón Bonilla
+## Creación de los contenedores
+
+### Contenedor para servicio Frontend
+
+```Docker
+# Se obtiene capa de sistema base desde el dockerhub, la versión alpine es una versión ligera.
+FROM node:lts-alpine
+
+# Se declara el directorio de trabajo
+WORKDIR /app/
+
+# Instalación de dependencias
+# COPY package.json yarn.lock /app/
+
+# RUN npm install
+
+# Se copia el Código del servicio frontend al contexto de Docker
+COPY . /app/
+
+# Se expone el puerto 3000 a través del cual podremos consumir el servicio
+EXPOSE 3000
+
+# Comando para inicialización del servicio
+# CMD npm start
+```
+
+### Contenedor para servicio Backend
+
+```Docker
+# Se obtiene capa de sistema base desde el dockerhub, la versión alpine es una versión ligera.
+FROM python:3.8-slim-buster
+
+# Se declara el directorio de trabajo
+WORKDIR /app/backend
+
+# Instalación de dependencias
+COPY requirements.txt /app/backend
+RUN pip3 install --upgrade pip -r requirements.txt
+
+# Se copia el Código del servicio frontend al contexto de Docker
+COPY . /app/backend
+
+# Se expone el puerto 3000 a través del cual podremos consumir el servicio
+EXPOSE 8000
+
+# Be sure to use 0.0.0.0 for the host within the Docker container,
+# otherwise the browser won't be able to find it
+# Comando para inicialización del servicio
+CMD python3 manage.py runserver 0.0.0.0:8000
+```
+
+### Conexión de servicios con `docker-compose`
+
+Compose es una herramienta para definir y ejecutar aplicaciones Docker de varios contenedores. Con Compose, usa un archivo YAML para configurar los servicios de su aplicación. Luego, con un solo comando, crea e inicia todos los servicios desde su configuración.
+
+Estructura del compose file básico
+
+```Docker
+# Se declara la versión del runtime de compose a usar
+version: "3.8"                                              
+# Se declaran los servicios que van a vivir dentro de compose
+services:                                                   
+  backend:
+    build: ./backend
+    # Se declara un volumen externo a docker para poder utilizar el filesystem
+    volumes:
+      - ./backend:/app/backend                              
+    # Apertura de puertos para consumir el servicio
+    ports:
+      - "8000:8000"                                         
+    stdin_open: true
+    tty: true
+    # Comando de inicialización del servicio backend
+    command: python3 manage.py runserver 0.0.0.0:8000       
+  frontend:
+    build: ./frontend
+    # Se declara un volumen externo a docker para poder utilizar el filesystem
+    volumes:
+      - ./frontend:/app                                     
+      # One-way volume to use node_modules from inside image
+      - /app/node_modules
+    # Apertura de puertos para consumir el servicio
+    ports:
+      - "3000:3000"                                         
+    environment:
+      - NODE_ENV=development
+    depends_on:                                             
+      - backend
+    # Comando de inicialización del servicio backend
+    command: npm start                                      
+```
+
 ## Conexión a la base de datos
 
 La base de datos productiva seleccionada para este proyecto es CloudSQL. Se utilizará un proxy para poder tener acceso a dicha base de datos desde un contexto local.
@@ -50,7 +161,3 @@ El despliegue de esta aplicación se realizará utilizando una estrategia de int
 -   Orquestador de pipelines: [Cloud Build](https://cloud.google.com/build?hl=es)
 -   Infraestructura: [AppEngine Flexible](https://cloud.google.com/appengine/docs/flexible)
 -   Base de datos: [Cloud SQL - Postgresql](https://cloud.google.com/sql?hl=es)
-
-## Desarrollo
-
-Cristian Orlando Rincón Bonilla
