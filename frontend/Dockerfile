@@ -11,6 +11,4 @@ WORKDIR /app/
 COPY . /app/
 RUN npm install
 
-EXPOSE 8080
-ENV HOST ci-cd-poligran.uc.r.appspot.com/
 CMD npm start
