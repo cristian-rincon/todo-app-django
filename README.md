@@ -38,3 +38,19 @@ docker-compose run --rm backend python manage.py migrate # Aplicar las migracion
 docker-compose run --rm backend python manage.py createsuperuser # Crear super usuario para django admin
 ```
 
+## Conexión a la base de datos
+
+La base de datos productiva seleccionada para este proyecto es CloudSQL. Se utilizará un proxy para poder tener acceso a dicha base de datos desde un contexto local.
+
+## Despliegue
+
+El despliegue de esta aplicación se realizará utilizando una estrategia de integración continua, cuyos componentes clave se describen a continuación:
+
+-   Repositorio: [Github](https://github.com/cristian-rincon/todoapp-django)
+-   Orquestador de pipelines: [Cloud Build](https://cloud.google.com/build?hl=es)
+-   Infraestructura: [AppEngine Flexible](https://cloud.google.com/appengine/docs/flexible)
+-   Base de datos: [Cloud SQL - Postgresql](https://cloud.google.com/sql?hl=es)
+
+## Desarrollo
+
+Cristian Orlando Rincón Bonilla
