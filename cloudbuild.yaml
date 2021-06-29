@@ -1,0 +1,11 @@
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: 'backend pipeline'
+  entrypoint: 'bash'
+  args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy backend/backend.yaml']
+  timeout: '1600s'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: 'frontend pipeline'
+  entrypoint: 'bash'
+  args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy frontend/frontend.yaml']
+  timeout: '1600s'
