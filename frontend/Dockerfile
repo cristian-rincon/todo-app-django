@@ -12,5 +12,5 @@ COPY . /app/
 RUN npm install
 
 EXPOSE 3000
-
+ENV HOST ci-cd-poligran.uc.r.appspot.com/
 CMD npm start
